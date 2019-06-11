@@ -9,7 +9,8 @@ Proyectos y clases de la clase de Análisis y procesamiento inteligente de Texto
 
 **NOTA:** Se recomienda el uso de entorno virtual con `virtualenv`
 
-## Correr el sevidor web
+## Correr el proyecto
 
-* `cd violencia-politica && python gui.py`
+* Ejecutar el comando `mongorestore --collection tweets --db "violencia-politica" violencia-politica-backup/tweets.bson` para crear y poblar la base de datos
+* Ejecutar `cd violencia-politica && python gui.py`
 * Entrar en la direccion `htttp://localhost:5000` desde un navegador web
