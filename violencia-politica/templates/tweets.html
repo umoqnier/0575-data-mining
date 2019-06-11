@@ -1,40 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <div class="row justify-content-center top-buffer">
-      <h1 class="margin-sm-all">Tweets de para el periodo de {{periodo | capitalize}}</h1>
-  </div>
-  {% if tweets == [] %}
-  <div class="row top-buffer">
-    <div class="col-md-12">
-      <p class="text-center"><i class="far fa-frown fa-10x"></i></p>
+  <div class="row justify-content-center mt-3">
+    <div class="col-12 text-center">
+      <h1 class="margin-sm-all display-4">Tweets de {{info.name}}</h1>
+      <img src="{{ info.profile_image_url }}" alt="imagen candidata" class="img-thumbnail">
+      <h3 class="text-muted">{{ info.description }}</h3>
+      <h5>Followers: <span class="badge badge-primary">{{ info.followers_count }}</span></h5>
     </div>
   </div>
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <p class="text-center font-weight-light">No exiten tweets para este periodo</p>
-    </div>
-  </div>
-  {% else %}
-    {% for d in data%}
-      <div class="row justify-content-center top-buffer">
-        <div class="col-md-10">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="card-title">@{{d.tweet["username"]}}</h3>
-              <h6 class="card-subtitle mb-2 text-muted">Fecha: {{d.tweet.date}} - Hora: {{ d.tweet.time }} Tweet id: {{ d.tweet.id }}</h6>
-              <p class="font-weight-light">{{d.tweet.text}}</p>
-              <a href="{{ url_for('index', role=display_role, period=display_period, candidate=display_candidate, tweet_id=tweet.id) }}" class="btn btn-info btn-block" role="button">
-                Ver Respuestas
-              </a>
-            </div>
-            <div class="card-footer text-muted">
-                Replies: <span class="badge badge-light">{{len(d.replies)}}</span>
-            </div>
+  {% for data_row in tweets | batch(3) %}
+    <div class="row justify-content-center top-buffer">
+    {% for d in data_row %}
+      <div class="col d-flex align-items-stretch">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">{{d["usuaria"]}}</h3>
+            <h6 class="card-subtitle mb-2 text-muted small">Fecha: {{ d.tweet.time | truncate(10, end='')}} 
+            <h6 class="card-subtitle mb-2 text-muted small">Tweet id: {{ d.tweet.id }}</h6>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <p class="lead p-1">{{d.tweet.text}}</p>
+            <a href="{{url_for('replies', username=d.usuaria, tweet_id=d._id)}}" class="btn btn-outline-success btn-block mt-auto" role="button">
+              Ver Respuestas
+            </a>
+          </div>
+          <div class="card-footer text-muted">
+              Replies: <span class="badge badge-success">{{d.replies | length}}</span>
           </div>
         </div>
       </div>
     {% endfor %}
-  {% endif %}
+    </div>
+  {% endfor %}
 </div>
 {% endblock %}

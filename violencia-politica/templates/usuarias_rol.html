@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <h1 class="text-center display-3">{{rol_display}}</h1>
+</div>
+
+  {% for candidata_row in candidatas | batch(4) %}
+
+<div class="row">
+
+    {% for candidata in candidata_row %}
+
+    <div class="col-sm-12 col-md-6 col-lg-3"> 
+    <div class="card text-center shadow-sm p-3 mb-4 bg-white rounded"> 
+      <img class="card-img-top" src="/static/img/default_user.png" alt="img_not_found"> 
+      <div class="card-body">
+        <h4 class="card-title one-line">{{candidata}}</h4>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <a target="_blank" href="{{url_for('usuaria', username=candidata)}}" class="btn btn-success btn-block" role="button"><i class="fas fa-comments"></i> Ver tweets</a> 
+            </div>
+            <div class="col mt-3">
+              <a target="_blank" href="https://twitter.com/{{candidata}}" class="btn btn-primary btn-block" role="button"><i class="fab fa-twitter"></i> Twitter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+  {% endfor %}
+{% endblock %}

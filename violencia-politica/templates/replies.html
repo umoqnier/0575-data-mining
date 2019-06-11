@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <p class="display-4 text-center">Tweet original</p>
+    </div>
+  </div>
+  <div class="row align-center mb-3">
+    <div class="col-12 d-flex align-items-stretch">
+          <div class="card bg-primary text-white">
+            <div class="card-header">
+              <h3 class="card-title">{{usuaria}}</h3>
+              <h6 class="card-subtitle mb-2 small">Fecha: {{ tweet.time | truncate(10, end='')}}
+              <h6 class="card-subtitle small">Tweet id: {{ tweet.id }}</h6>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="lead p-1">{{tweet.text}}</p>
+            </div>
+            <div class="card-footer">
+                Replies: <span class="badge badge-success">{{replies | length }}</span>
+            </div>
+          </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <p class="display-4 text-center">Respuestas</p>
+    </div>
+  </div>
+  {% for data_row in replies | batch(3) %}
+    <div class="row justify-content-center top-buffer">
+    {% for d in data_row %}
+      {% if d.text %}
+        <div class="col-4 d-flex align-items-stretch">
+          <div {% if d.polaridad < 0.0 %} class="card bg-dark text-white" {% elif d.polaridad > 0.0 %} class="card bg-success text-white" {% else %} class="card" {% endif %}>
+            <div class="card-header">
+              <h3 class="card-title">@{{d["screenName"]}}</h3>
+              <h6 class="card-subtitle mb-2 small">Fecha: {{ d.time | truncate(10, end='')}}</h6>
+              <h6 class="card-subtitle mb-2 small">Tweet id: {{ d.id }}</h6>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="lead p-1">{{d.text}}</p>
+            </div>
+            <div class="card-footer">
+                Polaridad: <span class="badge badge-primary">{{ d.polaridad }}</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

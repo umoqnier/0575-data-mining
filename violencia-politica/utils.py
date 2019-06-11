@@ -1,34 +1,41 @@
 import os
 import json
-from pymongo import MongoClient
+import tweepy
+from tokens import ACCESS_T, ACCESS_TS, CONSUMER_K, CONSUMER_S
 
 
-def get_db():
-    cliente = MongoClient()
-    db = cliente["violencia-politica"]
-    return db
+def get_twitter_api():
+    auth = tweepy.OAuthHandler(CONSUMER_K, CONSUMER_S)
+    auth.set_access_token(ACCESS_T, ACCESS_TS)
+    api = tweepy.API(auth)
+    return api
+
+
+def get_perfil_usuaria(username):
+    api = get_twitter_api()
+    data = api.get_user(username)
+    return data
 
 
 def get_users():
-    with open("usuarias.txt") as f:
+    with open("usuarias.txt", 'r') as f:
         data = f.read().splitlines()
     return data
 
 
 def get_roles():
-    return {"senadoras": "Senadoras", "diputadas": "Diputadas", "senadoras_rep": "Senadoras por Representación",
-            "diputadas_rep": "Diputadas por Representación", "candidatas_cdmx": "Candidatas CDMX",
-            "candidatas_queretaro": "Candidatas Querétaro", "candidatas_sonora": "Candidatas Sonora"}
-
-
-def get_tweets_periodo(periodo):
-    db = get_db()
-    return db.tweets.find({"periodo": periodo})
+    return {"senadoras": "Senadoras", "diputadas": "Diputadas",
+            "senadoras_rep": "Senadoras por Representación",
+            "diputadas_rep": "Diputadas por Representación",
+            "candidatas_cdmx": "Candidatas CDMX",
+            "candidatas_queretaro": "Candidatas Querétaro",
+            "candidatas_sonora": "Candidatas Sonora"}
 
 
 def tweets_usuaria(path, username):
     """
-    This function gets a path and return data frame with tweets and replies information
+    This function gets a path and return data frame with tweets
+    and replies information
     :param path: String from the base path to search tweets
     :return: Dataframe with json objects, that represent a tweet, as contain
     """
